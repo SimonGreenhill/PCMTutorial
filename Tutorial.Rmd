@@ -370,3 +370,33 @@ rARD$lik.anc[m, ]
 
 ...so a 91% probability that Proto-Uto-Aztecan had no farming, a 9% probability that they had small amount of agriculture, and a 0% probability they had high agriculture.
 
+## Stochastic Character Mapping
+
+Another way to investigate trait evolution is to use stochastic character mapping. 
+This samples a character history from the model to give a realisation of a character history.
+
+```{r}
+sER <- make.simmap(tree.rescaled,states, model="ER")
+sARD <- make.simmap(tree.rescaled,states, model="ARD")
+sARD
+```
+
+This also has the same log likelihood interpretation, that ARD is better:
+
+```{r}
+c(sER$logL, sARD$logL)
+```
+
+and a nice plotting method:
+
+```{r}
+plot(sER)
+```
+
+```{r}
+plot(sARD)
+```
+
+Because this is a stochastic approach, you should do this one many times on each tree and then summarise all the stochastic realisations.
+
+* Huelsenbeck JP, Nielsen R, & Bollback JP. 2003. Stochastic Mapping of Morphological Characters, Systematic Biology, Volume 52, 2, 1: 131–158.
