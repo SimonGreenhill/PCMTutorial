@@ -400,3 +400,48 @@ plot(sARD)
 Because this is a stochastic approach, you should do this one many times on each tree and then summarise all the stochastic realisations.
 
 * Huelsenbeck JP, Nielsen R, & Bollback JP. 2003. Stochastic Mapping of Morphological Characters, Systematic Biology, Volume 52, 2, 1: 131–158.
+
+## Discrete character co-evolution
+
+We can test if two discrete / binary characters are co-evolving using Mark Pagel's `Discrete` framework. Here we will test if the presence of high gods is linked to maize agriculture, because why not.
+
+
+
+```{r}
+# first we need to remove all tips with missing data. The R implementation cannot
+# handle these annoyingly, but BayesTraits can.
+tree.small <- drop.tip(tree.rescaled, data[is.na(data$HighGod), 'Taxon'])
+
+# convert the variables into the right format.
+m <- as.character(data[tree.small$tip.label, 'Maize'])
+names(m) <- tree.small$tip.label
+
+h <- as.character(data[tree.small$tip.label, 'HighGod'])
+names(h) <- tree.small$tip.label
+
+p <- fitPagel(tree.small, m, h, model="ARD")
+p
+```
+
+Ok, first of all we can see that the dependent model fits the data better (-12) than the independent model (-13), but unfortunately these two variables are not significantly correlated (p=0.62). 
+
+We can plot the rates easily. In my analysis, for example, the rate of gaining a high god once you had maize (0,0 -> 0,1) was .29, but the converse - gaining maize after you had a high god (1,0 -> 1,1) did not happen (i.e. the rate was 0). There's a title for a paper -- Does corn generate gods? 
+
+```{r}
+plot(p)
+```
+
+The canonical implementation of this method is in the BayesTraits software, and there BayesTraits Manual has a good tutorial: http://www.evolution.rdg.ac.uk/BayesTraitsV3.0.1/BayesTraitsV3.0.1.html
+
+* Pagel, M. (1994) Detecting correlated evolution on phylogenies: A general method for the comparative analysis fo discrete characters. Proceedings of the Royal Society B, 255, 37-45.
+
+
+
+
+
+### Your Turn:
+
+- why not see if you can get one of the other variables working? what can you tell me about them?
+
+
+
